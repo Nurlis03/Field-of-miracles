@@ -5,17 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class GameProgress {
     public String initAnswerProgress(String questionAnswer) {
-        StringBuilder userAnswerProgress = new StringBuilder();
-
-        for (char ch : questionAnswer.toCharArray()) {
-            if (ch == ' ') {
-                userAnswerProgress.append(' ');
-            } else {
-                userAnswerProgress.append('*');
-            }
-        }
-
-        return userAnswerProgress.toString();
+        return questionAnswer.replaceAll("[^ ]", "*");
     }
 
     public String updateCurrentProgress(String userAnswerProgress, String questionAnswer, String userAnswer) {
