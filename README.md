@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'com.example.miracle-field' is invalid and this project uses 'com.example.miracle_field' instead.
+* The original package name 'com.example.miracle-field' is invalid and this project uses 'com.example.miraclefield' instead.
 
 # Getting Started
 
