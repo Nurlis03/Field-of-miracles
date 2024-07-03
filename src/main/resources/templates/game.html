@@ -10,9 +10,11 @@
         <h1 class="text-xl md:text-2xl font-bold">Game</h1>
         <div class="flex items-center">
             <div class="text-right mr-2 md:mr-4">
-                <p class="text-base md:text-lg font-semibold" th:text="${user.username}"></p>
+                <a th:href="@{/profile}" class="text-base md:text-lg font-semibold" th:text="${user.username}"></a>
             </div>
-            <img class="w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-black" th:src="@{img/defaultAvatar.png}" alt="User Profile Picture">
+            <a th:href="@{/profile}">
+                <img class="w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-black" th:src="@{img/defaultAvatar.png}" alt="User Profile Picture">
+            </a>
         </div>
     </div>
 

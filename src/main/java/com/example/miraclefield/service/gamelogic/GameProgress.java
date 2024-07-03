@@ -20,7 +20,6 @@ public class GameProgress {
                 updatedProgress.setCharAt(i, questionAnswer.charAt(i));
             }
         }
-
         return updatedProgress.toString();
     }
 

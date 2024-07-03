@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @AllArgsConstructor
-@NoArgsConstructor
 public class UserService implements UserDetailsService {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
@@ -25,7 +24,7 @@ public class UserService implements UserDetailsService {
 
     public void save(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole("USER");
+        user.setRole("ADMIN");
         userRepository.save(user);
     }
 

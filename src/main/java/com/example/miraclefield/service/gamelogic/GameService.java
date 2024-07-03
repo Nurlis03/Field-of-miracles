@@ -9,9 +9,9 @@ import com.example.miraclefield.service.GameHistoryService;
 import com.example.miraclefield.service.QuestionService;
 import com.example.miraclefield.service.UserService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,17 +23,24 @@ import java.util.List;
 
 @Service
 @Slf4j
-@AllArgsConstructor
-@NoArgsConstructor
 public class GameService {
 
-    private UserService userService;
-    private QuestionService questionService;
-    private GameHistoryService gameHistoryService;
-    private GameProgress gameProgress;
+    private final UserService userService;
+    private final QuestionService questionService;
+    private final GameHistoryService gameHistoryService;
+    private final GameProgress gameProgress;
 
-    public String showGameBoard(Principal principal, Model model) {
-        User currentUser = userService.findByUsername(principal.getName());
+    @Autowired
+    public GameService(UserService userService, QuestionService questionService, GameHistoryService gameHistoryService, GameProgress gameProgress) {
+        this.userService = userService;
+        this. questionService = questionService;
+        this.gameHistoryService = gameHistoryService;
+        this.gameProgress = gameProgress;
+    }
+
+    public String showGameBoard(Model model) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userService.findByUsername(username);
 
         Question question = questionService.findUniqueUnansweredQuestionForUser(currentUser);
         if (question == null) {

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @Service
 @Slf4j
 @AllArgsConstructor
-@NoArgsConstructor
 public class RegistrationService {
 
     private UserService userService;

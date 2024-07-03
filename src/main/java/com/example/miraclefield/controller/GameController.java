@@ -1,6 +1,7 @@
 package com.example.miraclefield.controller;
 
 import com.example.miraclefield.dto.GameAnswerDTO;
+import com.example.miraclefield.repository.UserRepository;
 import com.example.miraclefield.service.gamelogic.GameService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -17,8 +18,8 @@ public class GameController {
     private final GameService gameService;
 
     @GetMapping("/game")
-    public String showGameBoard(Principal principal, Model model) {
-        return gameService.showGameBoard(principal, model);
+    public String showGameBoard(Model model) {
+        return gameService.showGameBoard(model);
     }
 
     @PostMapping("/game")

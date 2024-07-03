@@ -14,10 +14,9 @@ import java.util.Set;
 
 @Service
 @AllArgsConstructor
-@NoArgsConstructor
 public class QuestionService {
-    private QuestionRepository questionRepository;
 
+    private QuestionRepository questionRepository;
     private GameHistoryRepository gameHistoryRepository;
 
     public void save(Question question) {
