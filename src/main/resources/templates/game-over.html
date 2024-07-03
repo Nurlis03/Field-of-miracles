@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Game Over</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+<div class="w-full max-w-lg bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 text-center">
+    <h1 class="text-2xl font-bold mb-4">Game Over</h1>
+    <p class="mb-4 text-gray-700">Congratulations! You have answered all available questions.</p>
+    <p class="text-lg font-semibold">Thank you for playing!</p>
+
+    <!-- Button for Admin Panel -->
+    <a th:href="@{/admin/questions}" th:if="${user.role == 'ADMIN'}"
+       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">
+        Go to Admin Panel
+    </a>
+</div>
+</body>
+</html>
