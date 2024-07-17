@@ -1,9 +1,10 @@
 package com.example.miraclefield.service;
 
 import com.example.miraclefield.entity.Question;
+import com.example.miraclefield.entity.User;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,7 +18,9 @@ public class AdminService {
     private QuestionService questionService;
 
     public String listQuestions(Model model) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("questions", questionService.findAll());
+        model.addAttribute("user", user);
         return "admin/questions";
     }
 
@@ -28,28 +31,23 @@ public class AdminService {
 
     public String addQuestion(@ModelAttribute("question") @Valid Question question, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "admin/add-question"; // Return to the form if validation fails
-        }
-
-        // Check if the question already exists
-        if (questionService.existsByQuestionText(question.getQuestionText())) {
-            // Add an error message to inform the user
-            bindingResult.rejectValue("questionText", "duplicate.questionText", "Question already exists");
             return "admin/add-question";
         }
 
+        if (questionService.existsByQuestionText(question.getQuestionText())) {
+            bindingResult.rejectValue("questionText", "duplicate.questionText", "Question already exists");
+            return "admin/add-question";
+        }
+        question.setQuestionText(question.getQuestionText().trim());
+        question.setAnswer(question.getAnswer().trim());
         questionService.save(question);
         return "redirect:/admin/questions";
     }
 
     public String showEditQuestionForm(@PathVariable("id") Long id, Model model) {
         Question question = questionService.findById(id);
-        if (question != null) {
-            model.addAttribute("question", question);
-            return "admin/edit-question";
-        } else {
-            return "redirect:/admin/questions";
-        }
+        model.addAttribute("question", question);
+        return "admin/edit-question";
     }
 
     public String editQuestion(@ModelAttribute("question") @Valid Question question, BindingResult bindingResult) {
@@ -57,6 +55,8 @@ public class AdminService {
             return "admin/edit-question";
         }
         questionService.deleteRelatedGameHistories(question);
+        question.setQuestionText(question.getQuestionText().trim());
+        question.setAnswer(question.getAnswer().trim());
         questionService.save(question);
         return "redirect:/admin/questions";
     }

@@ -2,10 +2,9 @@ package com.example.miraclefield.service;
 
 import com.example.miraclefield.entity.GameHistory;
 import com.example.miraclefield.entity.Question;
-import com.example.miraclefield.entity.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import com.example.miraclefield.repository.GameHistoryRepository;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +18,7 @@ public class GameHistoryService {
         gameHistoryRepository.save(gameHistory);
     }
 
-    public List<GameHistory> findByUserAndQuestion(User user, Question question) {
+    public List<GameHistory> findByUserAndQuestion(UserDetails user, Question question) {
         return gameHistoryRepository.findByUserAndQuestion(user, question);
     }
 }

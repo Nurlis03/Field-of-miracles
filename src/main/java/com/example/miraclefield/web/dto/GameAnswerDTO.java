@@ -1,4 +1,4 @@
-package com.example.miraclefield.dto;
+package com.example.miraclefield.web.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

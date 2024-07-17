@@ -6,11 +6,21 @@
 </head>
 <body class="bg-gray-100">
 <div class="max-w-5xl mx-auto py-5 sm:px-6 lg:px-8">
-    <h1 class="text-3xl font-bold mb-6">Questions</h1>
-    <a href="/admin/questions/add" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4 inline-block">Add New Question</a>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">Questions</h1>
+        <div class="flex items-center">
+            <div class="text-right mr-2 md:mr-4">
+                <a th:href="@{/profile}" class="text-base md:text-lg font-semibold hover:text-blue-500 transition duration-300 ease-in-out" th:text="${user.firstName}"></a>
+            </div>
+            <a th:href="@{/profile}">
+                <img class="w-12 h-12 md:w-18 md:h-18 rounded-full border-2 border-black hover:border-blue-500 transition duration-300 ease-in-out" th:src="@{/img/defaultAvatar.png}" alt="User Profile Picture">
+            </a>
+        </div>
+    </div>
 
-    <!-- Link to game.html -->
+    <a href="/admin/questions/add" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4 inline-block">Add New Question</a>
     <a href="/game" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4 inline-block">Play Game</a>
+    <a href="/admin/users" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4 inline-block">Manage Users</a>
 
     <ul class="flex flex-col">
         <li th:each="question : ${questions}" class="bg-white shadow-md rounded px-4 py-4 mb-4 flex justify-between items-center">

@@ -2,11 +2,10 @@ package com.example.miraclefield.service;
 
 import com.example.miraclefield.entity.Question;
 import com.example.miraclefield.entity.GameHistory;
-import com.example.miraclefield.entity.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import com.example.miraclefield.repository.QuestionRepository;
 import com.example.miraclefield.repository.GameHistoryRepository;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,7 +34,7 @@ public class QuestionService {
         questionRepository.deleteById(questionId);
     }
 
-    public Question findUniqueUnansweredQuestionForUser(User user) {
+    public Question findUniqueUnansweredQuestionForUser(UserDetails user) {
         List<Question> allQuestions = questionRepository.findAll();
         Set<Long> answeredQuestionIds = gameHistoryRepository.findAnsweredQuestionIdsByUser(user);
 

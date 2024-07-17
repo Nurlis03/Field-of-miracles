@@ -1,39 +1,82 @@
 package com.example.miraclefield.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Date;
+import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "app_user")
+@Table(name = "user_account")
 @Setter
 @Getter
+@ToString
 public class User implements UserDetails {
+
+    private static final long serialVersionUID = 1L;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_account_seq")
+    @SequenceGenerator(name = "user_account_seq", sequenceName = "user_account_seq", allocationSize = 1)
     private Long id;
 
-    @Column(unique = true)
-    @NotEmpty(message = "Username is required")
-    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
-    private String username;
+    private String firstName;
 
-    @NotEmpty(message = "Password is required")
-    @Size(min = 8, message = "Password must be at least 8 characters long")
+    private String lastName;
+
+    private String middleName;
+
+    private String email;
+
+    private Date birthDate;
+
+    @Column(length = 60)
     private String password;
 
-    private String role;
+    private boolean accountNonLocked = true;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Collection<Role> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(role));
+        return roles.stream()
+                .map(Role::getGrantedAuthority)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public boolean hasRole(String roleName) {
+        return roles.stream().anyMatch(role -> role.getName().equals(roleName));
     }
 }

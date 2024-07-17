@@ -6,13 +6,23 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
 <div class="w-full max-w-lg bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 text-center">
-    <h1 class="text-2xl font-bold mb-4">Game Over</h1>
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl font-bold">Game Over</h1>
+        <div class="flex items-center">
+            <div class="text-right mr-2 md:mr-4">
+                <a th:href="@{/profile}" class="text-base md:text-lg font-semibold hover:text-blue-500 transition duration-300 ease-in-out" th:text="${user.firstName}"></a>
+            </div>
+            <a th:href="@{/profile}">
+                <img class="w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-black hover:border-blue-500 transition duration-300 ease-in-out" th:src="@{img/defaultAvatar.png}" alt="User Profile Picture">
+            </a>
+        </div>
+    </div>
     <p class="mb-4 text-gray-700">Congratulations! You have answered all available questions.</p>
     <p class="text-lg font-semibold">Thank you for playing!</p>
 
     <!-- Button for Admin Panel -->
-    <a th:href="@{/admin/questions}" th:if="${user.role == 'ADMIN'}"
-       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">
+    <a th:href="@{/admin/questions}" th:if="${user.hasRole('ROLE_ADMIN')}"
+       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block transition duration-300 ease-in-out">
         Go to Admin Panel
     </a>
 </div>

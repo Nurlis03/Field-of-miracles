@@ -1,7 +1,6 @@
-package com.example.miraclefield.controller;
+package com.example.miraclefield.web.controller;
 
-import com.example.miraclefield.dto.GameAnswerDTO;
-import com.example.miraclefield.repository.UserRepository;
+import com.example.miraclefield.web.dto.GameAnswerDTO;
 import com.example.miraclefield.service.gamelogic.GameService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 @Controller
 @AllArgsConstructor
 public class GameController {
@@ -24,7 +22,7 @@ public class GameController {
 
     @PostMapping("/game")
     public String checkAnswer(@ModelAttribute("gameAnswerDTO") @Valid GameAnswerDTO gameAnswerDTO,
-                              BindingResult bindingResult, Model model, Principal principal) {
-        return gameService.checkAnswer(gameAnswerDTO, bindingResult, model, principal);
+                              BindingResult bindingResult, Model model) {
+        return gameService.checkAnswer(gameAnswerDTO, bindingResult, model);
     }
 }

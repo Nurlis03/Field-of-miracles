@@ -3,32 +3,134 @@
 <head>
     <title>User Profile</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const successMessage = document.getElementById("successMessage").value;
+            if (successMessage) {
+                const alertDiv = document.getElementById("alert-3");
+                alertDiv.classList.remove("hidden");
+                document.getElementById("alert-text").innerText = successMessage;
+
+                setTimeout(() => {
+                    alertDiv.classList.add("hidden");
+                }, 3000); // 3 seconds
+            }
+
+            document.querySelectorAll("[data-dismiss-target]").forEach(button => {
+                button.addEventListener("click", function() {
+                    const target = document.querySelector(button.getAttribute("data-dismiss-target"));
+                    target.classList.add("hidden");
+                });
+            });
+        });
+    </script>
 </head>
 <body class="flex items-center justify-center min-h-screen bg-gray-100">
-<div class="w-full max-w-screen-sm bg-white shadow-md rounded px-6 py-4">
-    <div class="flex justify-between items-center mb-4">
-        <h1 class="text-xl md:text-2xl font-bold">Profile</h1>
-        <div class="flex items-center">
-            <div class="text-right mr-2 md:mr-4">
-                <p class="text-base md:text-lg font-semibold" th:text="${userDetails.username}"></p>
-            </div>
-            <img class="w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-black" th:src="@{img/defaultAvatar.png}" alt="User Profile Picture">
+<!-- Success alert -->
+<div id="alert-3" class="hidden flex items-center p-4 mb-4 text-green-800 rounded-lg bg-green-200 absolute top-0 left-50 right-50 mt-4 z-50" role="alert">
+    <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+    </svg>
+    <span class="sr-only">Info</span>
+    <div id="alert-text" class="ms-3 text-sm font-medium">
+        A simple info alert with an <a href="#" class="font-semibold underline hover:no-underline">example link</a>. Give it a click if you like.
+    </div>
+    <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-green-200 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-300 inline-flex items-center justify-center h-8 w-8" data-dismiss-target="#alert-3" aria-label="Close">
+        <span class="sr-only">Close</span>
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+        </svg>
+    </button>
+</div>
+<div class="w-full max-w-screen-sm bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 relative">
+    <h1 class="text-center text-2xl font-bold mb-4">Profile</h1>
+
+    <form rm th:action="@{/profile}" th:object="${userUpdateDto}" method="post">
+        <div class="flex justify-center mb-4">
+            <img class="w-16 h-16 rounded-full border-2 border-black" th:src="@{img/defaultAvatar.png}" alt="User Profile Picture">
         </div>
-    </div>
 
-    <div class="mb-4">
-        <p class="text-lg">Username: <span th:text="${userDetails.username}" class="font-semibold"></span></p>
-        <p class="text-lg">Roles: <span th:text="${userDetails.authorities}" class="font-semibold"></span></p>
-    </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="firstName">
+                    First Name
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                       id="firstName" name="firstName" type="text" th:field="*{firstName}">
+                <p class="text-red-500 text-xs italic" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
+            </div>
 
-    <!-- Logout Button -->
-    <div class="flex justify-end mb-4">
-        <form th:action="@{/logout}" method="post" class="inline">
-            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="lastName">
+                    Last Name
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                       id="lastName" name="lastName" type="text" th:field="*{lastName}">
+                <p class="text-red-500 text-xs italic" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="middleName">
+                    Middle Name (Optional)
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                       id="middleName" name="middleName" type="text" th:field="*{middleName}">
+                <p class="text-red-500 text-xs italic" th:if="${#fields.hasErrors('middleName')}" th:errors="*{middleName}"></p>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                    Email
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                       id="email" name="email" type="email" th:field="*{email}">
+                <p class="text-red-500 text-xs italic" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                <!-- emailErrorMessage message -->
+                <div th:if="${emailErrorMessage}" class="mb-4">
+                    <p class="text-red-500 text-sm italic" th:text="${emailErrorMessage}"></p>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="birthDate">
+                    Birth Date
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                       id="birthDate" name="birthDate" type="date" th:field="*{birthDate}">
+                <p class="text-red-500 text-xs italic" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></p>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex space-x-2">
+            <input type="hidden" name="isAdmin" th:value="${isAdmin}">
+            <button class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded focus:outline-none focus:shadow-outline" type="submit">
+                Save
+            </button>
+
+            <div th:if="${isAdmin}" class="w-full">
+                <a th:href="@{/admin/questions}" class="block text-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 rounded focus:outline-none focus:shadow-outline">
+                    Admin Panel
+                </a>
+            </div>
+
+            <a th:href="@{/game}" class="w-full text-center bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 rounded focus:outline-none focus:shadow-outline">
+                Play Game
+            </a>
+
+            <button type="button" class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 rounded focus:outline-none focus:shadow-outline" onclick="document.getElementById('logoutForm').submit();">
                 Logout
             </button>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
+
+<!-- Hidden logout form -->
+<form id="logoutForm" th:action="@{/logout}" method="post" class="hidden">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+</form>
+
+<!-- Hidden success message element -->
+<input type="hidden" id="successMessage" th:value="${successMessage}">
 </body>
 </html>

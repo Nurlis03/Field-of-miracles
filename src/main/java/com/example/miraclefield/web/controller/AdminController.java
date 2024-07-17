@@ -1,4 +1,4 @@
-package com.example.miraclefield.controller;
+package com.example.miraclefield.web.controller;
 
 import com.example.miraclefield.entity.Question;
 import com.example.miraclefield.service.AdminService;

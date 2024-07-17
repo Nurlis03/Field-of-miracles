@@ -1,23 +1,23 @@
 package com.example.miraclefield.service.gamelogic;
 
-import com.example.miraclefield.dto.GameAnswerDTO;
+import com.example.miraclefield.entity.User;
+import com.example.miraclefield.web.dto.GameAnswerDTO;
 import com.example.miraclefield.entity.AnswerStatus;
 import com.example.miraclefield.entity.GameHistory;
 import com.example.miraclefield.entity.Question;
-import com.example.miraclefield.entity.User;
 import com.example.miraclefield.service.GameHistoryService;
 import com.example.miraclefield.service.QuestionService;
-import com.example.miraclefield.service.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,22 +25,19 @@ import java.util.List;
 @Slf4j
 public class GameService {
 
-    private final UserService userService;
     private final QuestionService questionService;
     private final GameHistoryService gameHistoryService;
     private final GameProgress gameProgress;
 
     @Autowired
-    public GameService(UserService userService, QuestionService questionService, GameHistoryService gameHistoryService, GameProgress gameProgress) {
-        this.userService = userService;
-        this. questionService = questionService;
+    public GameService(QuestionService questionService, GameHistoryService gameHistoryService, GameProgress gameProgress) {
+        this.questionService = questionService;
         this.gameHistoryService = gameHistoryService;
         this.gameProgress = gameProgress;
     }
 
     public String showGameBoard(Model model) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User currentUser = userService.findByUsername(username);
+        UserDetails currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Question question = questionService.findUniqueUnansweredQuestionForUser(currentUser);
         if (question == null) {
@@ -62,9 +59,10 @@ public class GameService {
     }
 
     public String checkAnswer(@ModelAttribute("gameAnswerDTO") @Valid GameAnswerDTO gameAnswerDTO,
-                              BindingResult result, Model model, Principal principal) {
+                              BindingResult result, Model model) {
+        UserDetails currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Question currentQuestion = questionService.findById(gameAnswerDTO.getQuestionId());
-        User currentUser = userService.findByUsername(principal.getName());
+
         List<GameHistory> questionSpecificHistories = gameHistoryService.findByUserAndQuestion(currentUser, currentQuestion);
         String userAnswer = gameAnswerDTO.getUserAnswer();
         String userAnswerProgress = gameAnswerDTO.getUserAnswerProgress();
@@ -83,7 +81,7 @@ public class GameService {
 
         AnswerStatus answerStatus = guess.guess(userAnswer, currentQuestion.getAnswer(), userAnswerProgress);
 
-        GameHistory gameHistory = createGameHistory(currentUser, currentQuestion, answerStatus, userAnswer);
+        GameHistory gameHistory = createGameHistory((User) currentUser, currentQuestion, answerStatus, userAnswer);
         gameHistoryService.save(gameHistory);
         questionSpecificHistories.add(gameHistory);
 
@@ -99,7 +97,7 @@ public class GameService {
     }
 
     private String processAnswer(AnswerStatus answerStatus, Model model, Question currentQuestion,
-                                 List<GameHistory> questionSpecificHistories, User currentUser,
+                                 List<GameHistory> questionSpecificHistories, UserDetails currentUser,
                                  String userAnswerProgress) {
         if (answerStatus == AnswerStatus.NO || answerStatus == AnswerStatus.GUESS_CHARACTER) {
             return setupGameModel(model, currentQuestion, questionSpecificHistories, currentUser, userAnswerProgress);
@@ -112,6 +110,7 @@ public class GameService {
         Question newQuestion = questionService.findUniqueUnansweredQuestionForUser(currentUser);
         if (newQuestion == null) {
             model.addAttribute("user", currentUser);
+            log.info(currentUser.toString());
             return "game-over";
         }
 
@@ -122,7 +121,7 @@ public class GameService {
 
     private String setupGameModel(Model model, Question question,
                                   List<GameHistory> questionSpecificHistories,
-                                  User user, String userAnswerProgress) {
+                                  UserDetails user, String userAnswerProgress) {
         model.addAttribute("question", question);
         model.addAttribute("questionSpecificHistories", questionSpecificHistories);
         model.addAttribute("user", user);
