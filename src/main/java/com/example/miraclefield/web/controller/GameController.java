@@ -1,6 +1,6 @@
 package com.example.miraclefield.web.controller;
 
-import com.example.miraclefield.web.dto.GameAnswerDTO;
+import com.example.miraclefield.web.dto.GameAnswerDto;
 import com.example.miraclefield.service.gamelogic.GameService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ public class GameController {
     }
 
     @PostMapping("/game")
-    public String checkAnswer(@ModelAttribute("gameAnswerDTO") @Valid GameAnswerDTO gameAnswerDTO,
+    public String checkAnswer(@ModelAttribute("gameAnswerDTO") @Valid GameAnswerDto gameAnswerDTO,
                               BindingResult bindingResult, Model model) {
         return gameService.checkAnswer(gameAnswerDTO, bindingResult, model);
     }

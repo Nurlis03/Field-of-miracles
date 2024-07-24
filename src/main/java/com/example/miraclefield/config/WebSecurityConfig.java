@@ -26,8 +26,8 @@ public class WebSecurityConfig {
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/game")
-                        .failureUrl("/login?error=true")
+                        .defaultSuccessUrl("/game", true)
+                        .failureUrl("/login-error")
                         .permitAll()
                 )
                 .logout((logout) -> logout

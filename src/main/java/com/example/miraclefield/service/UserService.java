@@ -40,7 +40,7 @@ public class UserService {
     }
 
     public boolean emailExists(String email) {
-        return userRepository.findByEmail(email) != null;
+        return userRepository.findByEmail(email) != null; // change to exists
     }
 
     public void updateUser(UserUpdateDto userUpdateDto) {

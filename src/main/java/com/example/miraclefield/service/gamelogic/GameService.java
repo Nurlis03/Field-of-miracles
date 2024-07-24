@@ -1,7 +1,7 @@
 package com.example.miraclefield.service.gamelogic;
 
 import com.example.miraclefield.entity.User;
-import com.example.miraclefield.web.dto.GameAnswerDTO;
+import com.example.miraclefield.web.dto.GameAnswerDto;
 import com.example.miraclefield.entity.AnswerStatus;
 import com.example.miraclefield.entity.GameHistory;
 import com.example.miraclefield.entity.Question;
@@ -52,15 +52,15 @@ public class GameService {
         model.addAttribute("question", question);
         model.addAttribute("questionSpecificHistories", questionSpecificHistories);
         model.addAttribute("user", currentUser);
-        model.addAttribute("gameAnswerDTO", new GameAnswerDTO());
+        model.addAttribute("gameAnswerDTO", new GameAnswerDto());
         model.addAttribute("userAnswerProgress", userAnswerProgress);
 
         return "game";
     }
 
-    public String checkAnswer(@ModelAttribute("gameAnswerDTO") @Valid GameAnswerDTO gameAnswerDTO,
+    public String checkAnswer(@ModelAttribute("gameAnswerDTO") @Valid GameAnswerDto gameAnswerDTO,
                               BindingResult result, Model model) {
-        UserDetails currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Question currentQuestion = questionService.findById(gameAnswerDTO.getQuestionId());
 
         List<GameHistory> questionSpecificHistories = gameHistoryService.findByUserAndQuestion(currentUser, currentQuestion);
@@ -81,7 +81,7 @@ public class GameService {
 
         AnswerStatus answerStatus = guess.guess(userAnswer, currentQuestion.getAnswer(), userAnswerProgress);
 
-        GameHistory gameHistory = createGameHistory((User) currentUser, currentQuestion, answerStatus, userAnswer);
+        GameHistory gameHistory = createGameHistory(currentUser, currentQuestion, answerStatus, userAnswer);
         gameHistoryService.save(gameHistory);
         questionSpecificHistories.add(gameHistory);
 

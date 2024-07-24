@@ -4,6 +4,7 @@ import com.example.miraclefield.entity.User;
 import com.example.miraclefield.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,6 +28,10 @@ public class CustomUserDetailsService implements UserDetailsService {
             if (user == null) {
                 log.error("No user found with email: " + email);
                 throw new UsernameNotFoundException("No user found with email: " + email);
+            }
+            if (!user.isAccountNonLocked()) {
+                log.warn("User locked with email: " + email);
+                throw new LockedException("User with email " + email + " is locked");
             }
             return user;
         } catch (final Exception e) {

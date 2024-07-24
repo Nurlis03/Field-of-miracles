@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class GameAnswerDTO {
+public class GameAnswerDto {
 
     @NotNull
     private Long questionId;
