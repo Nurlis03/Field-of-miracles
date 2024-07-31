@@ -1,7 +1,9 @@
 package com.example.miraclefield.service.gamelogic;
 
 import com.example.miraclefield.entity.AnswerStatus;
+import org.springframework.stereotype.Component;
 
+@Component
 public class GuessWordImpl implements Guess {
 
     @Override

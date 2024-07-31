@@ -1,21 +1,28 @@
 package com.example.miraclefield.web.dto;
 
+import com.example.miraclefield.entity.GameHistory;
+import com.example.miraclefield.entity.Question;
+import com.example.miraclefield.entity.User;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+
+import java.util.List;
 
 @Getter
 @Setter
-@ToString
+@Builder
 public class GameAnswerDto {
 
-    @NotNull
-    private Long questionId;
+    private Question question;
+
+    private List<GameHistory> questionSpecificHistories;
 
     @NotBlank(message = "Answer cannot be empty")
     private String userAnswer;
 
     private String userAnswerProgress;
+
+    private User user;
 }

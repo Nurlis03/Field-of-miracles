@@ -27,8 +27,8 @@ public class AdminController {
     }
 
     @PostMapping("/add")
-    public String addQuestion(@ModelAttribute("question") @Valid Question question, BindingResult bindingResult, Model model) {
-        return adminService.addQuestion(question, bindingResult, model);
+    public String addQuestion(@ModelAttribute("question") @Valid Question question, BindingResult bindingResult) {
+        return adminService.addQuestion(question, bindingResult);
     }
 
     @GetMapping("/edit/{id}")

@@ -6,20 +6,21 @@
 </head>
 <body class="flex items-center justify-center min-h-screen bg-gray-100">
 <div class="w-full max-w-screen-sm bg-white shadow-md rounded px-6 py-4">
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex justify-between items-stretch mb-4">
         <h1 class="text-xl md:text-2xl font-bold">Game</h1>
         <div class="flex items-center">
-            <div class="text-right mr-2 md:mr-4">
-                <a th:href="@{/profile}" class="text-base md:text-lg font-semibold hover:text-blue-500 transition duration-300 ease-in-out" th:text="${user.firstName}"></a>
-            </div>
-            <a th:href="@{/profile}">
-                <img class="w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-black hover:border-blue-500 transition duration-300 ease-in-out" th:src="@{img/defaultAvatar.png}" alt="User Profile Picture">
+            <a th:href="@{/profile}" class="flex items-center">
+                <div class="ml-2 text-right mr-4">
+                    <p class="text-base md:text-lg font-semibold hover:text-blue-500 transition duration-300 ease-in-out" th:text="${gameAnswerDto.user.firstName}"></p>
+                    <p class="text-base text-gray-700">Points: <span class="text-blue-500 font-semibold" th:text="${gameAnswerDto.user.point.amount}"></span></p>
+                </div>
+                <img class="w-12 h-12 md:w-18 md:h-18 rounded-full border-2 border-black hover:border-blue-500 transition duration-300 ease-in-out" th:src="@{/img/defaultAvatar.png}" alt="User Profile Picture">
             </a>
         </div>
     </div>
 
     <!-- Admin Button -->
-    <div th:if="${user.hasRole('ROLE_ADMIN')}" class="flex justify-end mb-4">
+    <div th:if="${gameAnswerDto.user.hasRole('ROLE_ADMIN')}" class="flex justify-end mb-4">
         <a th:href="@{/admin/questions}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
             Admin Panel
         </a>
@@ -29,25 +30,25 @@
         <p th:text="${message}" class="text-red-500 text-sm"></p>
     </div>
 
-    <div th:if="${question}">
-        <p class="mb-4">Question: <span th:text="${question.questionText}" class="font-semibold"></span></p>
-        <form th:action="@{/game}" th:object="${gameAnswerDTO}" method="post" class="mb-4">
-            <p class="mb-4">Answer: <span th:text="${userAnswerProgress}" class="font-semibold"></span></p>
-            <div class="mb-4">
-                <label for="userAnswer" class="block text-gray-700 text-sm font-bold mb-2">Your Answer:</label>
-                <input type="text" id="userAnswer" th:field="*{userAnswer}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                <p th:if="${#fields.hasErrors('userAnswer')}" th:errors="*{userAnswer}" class="text-red-500 text-xs italic"></p>
-            </div>
-            <input type="hidden" th:name="questionId" th:value="${question.id}">
-            <input type="hidden" th:name="userAnswerProgress" th:value="${userAnswerProgress}">
-            <div class="flex justify-end">
-                <button type="submit"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Submit
-                </button>
-            </div>
-        </form>
-    </div>
+    <p class="mb-4">Question: <span th:text="${gameAnswerDto.question.questionText}" class="font-semibold"></span></p>
+    <form th:action="@{/game}" th:object="${gameAnswerDto}" method="post" class="mb-4">
+        <p class="mb-4">Answer: <span th:text="${gameAnswerDto.userAnswerProgress}" class="font-semibold"></span></p>
+        <div class="mb-4">
+            <label for="userAnswer" class="block text-gray-700 text-sm font-bold mb-2">Your Answer:</label>
+            <input type="text" id="userAnswer" th:field="*{userAnswer}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <p th:if="${#fields.hasErrors('userAnswer')}" th:errors="*{userAnswer}" class="text-red-500 text-xs italic"></p>
+        </div>
+        <input type="hidden" th:field="*{question}">
+        <input type="hidden" th:field="*{questionSpecificHistories}">
+        <input type="hidden" th:field="*{userAnswerProgress}">
+        <input type="hidden" th:field="*{user}">
+        <div class="flex justify-end">
+            <button type="submit"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Submit
+            </button>
+        </div>
+    </form>
 
     <!-- Display game histories specific to the current question -->
     <div class="overflow-x-auto">
@@ -60,10 +61,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:if="${#lists.isEmpty(questionSpecificHistories)}">
+            <tr th:if="${#lists.isEmpty(gameAnswerDto.questionSpecificHistories)}">
                 <td colspan="3" class="text-center py-4 text-gray-500">No game history available for this question.</td>
             </tr>
-            <tr th:each="history : ${questionSpecificHistories}" class="text-gray-700">
+            <tr th:each="history : ${gameAnswerDto.questionSpecificHistories}" class="text-gray-700">
                 <td th:text="${#strings.replace(history.answerStatus, '_', ' ')}" class="py-2 px-3 md:px-4 border-b text-center"></td>
                 <td th:text="${history.userAnswer}" class="py-2 px-3 md:px-4 border-b text-center"></td>
                 <td th:text="${#temporals.format(history.timeProgress, 'yyyy-MM-dd HH:mm:ss')}" class="py-2 px-3 md:px-4 border-b text-center"></td>

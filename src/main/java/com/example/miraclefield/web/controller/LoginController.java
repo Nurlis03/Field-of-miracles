@@ -1,37 +1,35 @@
 package com.example.miraclefield.web.controller;
 
 
+import com.example.miraclefield.service.LoginService;
+import com.example.miraclefield.web.dto.LoginDto;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @AllArgsConstructor
 @Slf4j
 public class LoginController {
 
-    @Autowired
-    ObjectFactory<HttpSession> httpSessionFactory;
+    private LoginService loginService;
 
     @GetMapping("/login")
-    public String login() {
+    public String login(Model model) {
+        model.addAttribute("loginDto", LoginDto.builder().build());
         return "login";
     }
 
-    @GetMapping("/login-error")
-    public String loginError(Model model) {
-        HttpSession session = httpSessionFactory.getObject();
-        AuthenticationException ex = (AuthenticationException) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-        String loginError = ex.getMessage().substring(ex.getMessage().indexOf(":") + 1).trim();
-        model.addAttribute("loginError", loginError);
-        return "login";
+    @PostMapping("/login")
+    public String loginProcess(@ModelAttribute("loginDto") @Valid LoginDto loginDto,
+                             BindingResult bindingResult, Model model, HttpServletRequest request) {
+        return loginService.loginUser(loginDto, bindingResult, model, request);
     }
 }

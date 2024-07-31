@@ -5,7 +5,9 @@ import com.example.miraclefield.validation.ValidEmail;
 import com.example.miraclefield.validation.ValidPassword;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -14,7 +16,6 @@ import java.util.Date;
 @Getter
 @Setter
 @Builder
-@ToString
 public class UserDto {
 
     @NotBlank(message = "First Name should not be empty")

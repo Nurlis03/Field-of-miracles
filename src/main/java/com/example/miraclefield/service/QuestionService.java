@@ -1,15 +1,13 @@
 package com.example.miraclefield.service;
 
-import com.example.miraclefield.entity.Question;
 import com.example.miraclefield.entity.GameHistory;
-import org.springframework.security.core.userdetails.UserDetails;
-import com.example.miraclefield.repository.QuestionRepository;
+import com.example.miraclefield.entity.Question;
 import com.example.miraclefield.repository.GameHistoryRepository;
+import com.example.miraclefield.repository.QuestionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -34,14 +32,8 @@ public class QuestionService {
         questionRepository.deleteById(questionId);
     }
 
-    public Question findUniqueUnansweredQuestionForUser(UserDetails user) {
-        List<Question> allQuestions = questionRepository.findAll();
-        Set<Long> answeredQuestionIds = gameHistoryRepository.findAnsweredQuestionIdsByUser(user);
-
-        return allQuestions.stream()
-                .filter(question -> !answeredQuestionIds.contains(question.getId()))
-                .findFirst()
-                .orElse(null);
+    public Question findUniqueUnansweredQuestionForUser(Long userId) {
+        return questionRepository.findRandomUnansweredQuestionByUserId(userId);
     }
 
     public void deleteRelatedGameHistories(Question question) {

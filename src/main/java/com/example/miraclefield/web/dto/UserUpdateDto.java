@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -14,7 +13,6 @@ import java.util.Date;
 @Getter
 @Setter
 @Builder
-@ToString
 public class UserUpdateDto {
     @NotBlank(message = "First Name should not be empty")
     private String firstName;
